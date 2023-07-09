@@ -1,14 +1,23 @@
-import { components, current } from "./hooks.js";
-import "./components.js";
+import { components, current } from "./hooks";
+import "./components";
+
+declare global {
+  interface Window {
+    React: {
+      functions: Record<string, Function>,
+      inRender: boolean;
+    };
+  }
+}
 
 window.React = {
   functions: {},
   inRender: false,
 }
 
-export * from "./hooks.js";
+export * from "./hooks";
 
-export function register(component, alias = null) {
+export function register(component: Function, alias: string | null = null): void {
   const name = "x-" + (alias || component.name.toLowerCase());
 
   class CustomElement extends HTMLElement {
@@ -31,15 +40,15 @@ export function register(component, alias = null) {
       window.React.inRender = false;
       node.setAttribute("data-reactive", name);
 
-      this.shadowRoot.innerHTML = "";
-      this.shadowRoot.append(node);
+      this.shadowRoot!.innerHTML = "";
+      this.shadowRoot!.append(node);
     }
   }
 
   customElements.define(name, CustomElement);
 }
 
-export function render(strings, ...values) {
+export function render(strings: TemplateStringsArray, ...values: any[]): Node {
   const htmlString = strings.reduce((result, string, i) => {
     let value = values[i];
 
@@ -57,7 +66,7 @@ export function render(strings, ...values) {
 
   const template = document.createElement("template");
   template.innerHTML = htmlString.trim();
-  const node = template.content.firstChild;
+  const node = template.content.firstChild!;
 
   for (let i = 0; i < values.length; i++)
     if (values[i].constructor.name === "Ref")

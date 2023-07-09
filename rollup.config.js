@@ -1,5 +1,5 @@
 exports.default = {
-	input: "src/index.js",
+	input: "ts-out/index.js",
 	preserveEntrySignatures: "strict",
 	output: [{
 		file: "dist/index.cjs.js",

@@ -1,14 +1,14 @@
-const refs = new Map();
-const store = {};
-const effects = new Map();
-const cleanupFunctions = new Map();
+const refs = new Map<string, Ref>();
+const store: Record<string, any> = {};
+const effects = new Map<string, any[]>();
+const cleanupFunctions = new Map<string, () => void>();
 const id = Math.random().toString(36).substring(2, 15);
 
-export const components = {};
+export const components: Record<string, any> = {};
 
-export const current = { component: null, refIndex: null };
+export const current = { component: null as string | null, refIndex: null as number | null };
 
-export function useEffect(effect, deps) {
+export function useEffect(effect: () => (() => void) | void, deps: any[]) {
   const effectId = effect.name || effect.toString();
   const oldDeps = effects.get(effectId);
 
@@ -27,28 +27,30 @@ export function useEffect(effect, deps) {
   }
 }
 
-export function useState(initialValue) {
+export function useState<T>(initialValue: T): [T, (newValue: T) => void] {
   if (!store[id])
     store[id] = initialValue;
 
   return [
     store[id],
-    (newValue) => {
+    (newValue: T) => {
       store[id] = newValue;
       Object.values(components).forEach(component => component.render());
     }
   ];
 }
 
-class Ref {
-  constructor(initialValue) {
-    this.current = initialValue;
-  }
+class Ref<T = any> {
+  constructor(public current: T) {}
 }
 
-export function useRef(initialValue) {
+export function useRef<T>(initialValue: T): Ref<T> {
+  if (current.component === null || current.refIndex === null) {
+    throw new Error("useRef cannot be used out of context");
+  }
+
   const refId = `${current.component}_${current.refIndex}`;
-  let ref = refs.has(refId) ? refs.get(refId) : new Ref(initialValue);
+  let ref = refs.has(refId) ? refs.get(refId) as Ref<T> : new Ref(initialValue);
 
   if (!window.React.inRender)
     current.refIndex++;

@@ -2,10 +2,17 @@
   "name": "@dscvr-solutions/space",
   "version": "0.1.0",
   "private": true,
+  "main": "dist/index.cjs.js",
+  "author": "Lucas Craveiro Paes <@lucascraveiropaes>",
+  "license": "MIT",
   "scripts": {
     "dev": "nodemon --exec 'npm run build && npm run start' --config nodemon.config.json",
     "start": "http-server",
-    "build": "rm -r dist && rollup -c"
+    "build": "node scripts/build.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/discovery-solutions/react.git"
   },
   "devDependencies": {
     "http-server": "^14.1.1",

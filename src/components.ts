@@ -1,8 +1,8 @@
 const context = {
-  getBaseURL: null,
+  getBaseURL: null as string | null,
 }
 
-function clearURL(url) {
+function clearURL(url: string): string {
   if (url.endsWith("/"))
     url = url.slice(0, -1);
 
@@ -13,30 +13,29 @@ class ReactiveRouter extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
-    this.originalLocation = clearURL(window.location.pathname);
     window.addEventListener("popstate", () => this.updateRoute());
   }
 
-  connectedCallback() {
+  connectedCallback(): void {
     this.updateRoute();
   }
 
-  updateRoute() {
+  updateRoute(): void {
     const route = clearURL(window.location.hash.slice(1));
-    this.shadowRoot.innerHTML = "";
+    this.shadowRoot!.innerHTML = "";
 
     const template = Array.from(this.querySelectorAll("template")).find((template) => {
-      const templateRoute = clearURL(template.getAttribute("data-route"));
+      const templateRoute = clearURL(template.getAttribute("data-route") || "");
 
-      if (templateRoute !== "#")
-        return templateRoute.includes(route);
+      if (["#", "/", ""].includes(templateRoute))
+        return route === "";
       
-      return route === "";
+      return templateRoute.includes(route);
     });
 
     if (template) {
-      this.shadowRoot.innerHTML = "";
-      this.shadowRoot.appendChild(template.content.cloneNode(true));
+      this.shadowRoot!.innerHTML = "";
+      this.shadowRoot!.appendChild(template.content.cloneNode(true));
     }
   }
 }
@@ -47,12 +46,12 @@ class ReactiveLink extends HTMLElement {
 
     this.addEventListener("click", (event) => {
       event.preventDefault();
-      window.history.pushState(null, "", this.getAttribute("href"));
+      window.history.pushState(null, "", this.getAttribute("href") || "");
       window.dispatchEvent(new Event("popstate"));
     });
   }
 
-  connectedCallback() {
+  connectedCallback(): void {
     this.style.color = "blue";
     this.style.textDecoration = "underline";
     this.style.cursor = "pointer";
