@@ -14,7 +14,7 @@ A lightweight, custom elements-based library for building reactive web component
 Here's a basic example of a component built with @dscrv-solutions/react:
 
 ```javascript
-import { register, render, useState } from 'https://cdn.jsdelivr.net/gh/discovery-solutions/react@master/src/index.es.js';
+import { register, render, useState } from 'https://cdn.jsdelivr.net/gh/discovery-solutions/react@master/dist/index.es.js';
 
 const Counter = () => {
   const [count, setCount] = useState(0);
@@ -62,7 +62,7 @@ You can then use this component in your HTML like any other custom element:
 @dscrv-solutions/react includes a basic hooks API. Here's an example of how to use the `useState` and `useEffect` hooks:
 
 ```javascript
-import { register, render, useState, useEffect } from 'https://cdn.jsdelivr.net/gh/discovery-solutions/react@master/src/index.es.js';
+import { register, render, useState, useEffect } from 'https://cdn.jsdelivr.net/gh/discovery-solutions/react@master/dist/index.es.js';
 
 const Counter = () => {
   const [count, setCount] = useState(0);
