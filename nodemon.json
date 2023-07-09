@@ -1,3 +1,4 @@
 {
+  "verbose": true,
   "ignore": ["dist/", "ts-out/", "scripts/"]
 }

@@ -1,11 +1,12 @@
-const { existsSync, rmdirSync } = require("fs");
+const { existsSync, mkdirSync, rmSync } = require("fs");
 const { execSync } = require("child_process");
 
 function deleteDirectory(dirPath) {
   if (existsSync(dirPath) === false)
     return false;
     
-  rmdirSync(dirPath, { recursive: true });
+  rmSync(dirPath, { recursive: true });
+  mkdirSync(dirPath);
 }
 
 console.log("Setting things up...");

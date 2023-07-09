@@ -62,14 +62,15 @@ class ReactiveRouter extends HTMLElement {
         this.updateRoute();
     }
     updateRoute() {
-        const route = clearURL(window.location.hash.slice(1));
+        const route = clearURL(window.location.pathname);
         this.shadowRoot.innerHTML = "";
         const template = Array.from(this.querySelectorAll("template")).find((template) => {
             const templateRoute = clearURL(template.getAttribute("data-route") || "");
-            if (["#", "/", ""].includes(templateRoute))
-                return route === "";
+            // if (["#", "/", ""].includes(templateRoute))
+            //   return template;
             return templateRoute.includes(route);
         });
+        console.log(template);
         if (template) {
             this.shadowRoot.innerHTML = "";
             this.shadowRoot.appendChild(template.content.cloneNode(true));
@@ -99,13 +100,16 @@ window.React = {
     inRender: false,
 };
 function register(component, alias = null) {
-    const name = "x-" + (alias || component.name.toLowerCase());
+    let name = (alias || component.name.toLowerCase());
+    if (name.includes("-") === false)
+        name = "x-" + name;
     class CustomElement extends HTMLElement {
         constructor() {
             super();
             components[name] = this;
             current.refIndex = 0;
             current.component = name;
+            this.reactive = name;
             this.attachShadow({ mode: "open" });
             this.render();
         }
@@ -119,6 +123,7 @@ function register(component, alias = null) {
         }
     }
     customElements.define(name, CustomElement);
+    return { reactive: name };
 }
 function render(strings, ...values) {
     const htmlString = strings.reduce((result, string, i) => {

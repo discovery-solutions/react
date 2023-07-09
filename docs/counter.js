@@ -1,4 +1,3 @@
-// import { register, render, useState, useEffect, useRef } from "/src/index.js";
 import { register, render, useState, useEffect, useRef } from "https://cdn.jsdelivr.net/gh/discovery-solutions/react@master/dist/index.es.js";
 
 function Counter() {

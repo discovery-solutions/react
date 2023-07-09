@@ -21,14 +21,14 @@ class ReactiveRouter extends HTMLElement {
   }
 
   updateRoute(): void {
-    const route = clearURL(window.location.hash.slice(1));
+    const route = clearURL(window.location.pathname);
     this.shadowRoot!.innerHTML = "";
 
     const template = Array.from(this.querySelectorAll("template")).find((template) => {
       const templateRoute = clearURL(template.getAttribute("data-route") || "");
 
       if (["#", "/", ""].includes(templateRoute))
-        return route === "";
+        return template;
       
       return templateRoute.includes(route);
     });

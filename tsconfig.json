@@ -1,5 +1,5 @@
 {
-  "include": ["./src/**/*.ts"],
+  "include": ["./src/core/**/*.ts"],
   "compilerOptions": {
     "target": "es2016",                          
     "module": "esnext",
@@ -9,6 +9,6 @@
     "strict": true,  
     "esModuleInterop": false,                 
     "outDir": "ts-out",
-    "rootDir": "./src/"
+    "rootDir": "./src/core"
   },
 }

@@ -17,10 +17,15 @@ window.React = {
 
 export * from "./hooks";
 
-export function register(component: Function, alias: string | null = null): void {
-  const name = "x-" + (alias || component.name.toLowerCase());
+export function register(component: Function, alias: string | null = null): any {
+  let name = (alias || component.name.toLowerCase());
+
+  if (name.includes("-") === false)
+    name = "x-" + name;
 
   class CustomElement extends HTMLElement {
+    reactive: string;
+  
     constructor() {
       super();
 
@@ -29,6 +34,7 @@ export function register(component: Function, alias: string | null = null): void
       current.refIndex = 0;
       current.component = name;
 
+      this.reactive = name;
       this.attachShadow({ mode: "open" });
 
       this.render();
@@ -46,6 +52,8 @@ export function register(component: Function, alias: string | null = null): void
   }
 
   customElements.define(name, CustomElement);
+
+  return { reactive: name };
 }
 
 export function render(strings: TemplateStringsArray, ...values: any[]): Node {

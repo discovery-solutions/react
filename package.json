@@ -6,8 +6,7 @@
   "author": "Lucas Craveiro Paes <@lucascraveiropaes>",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon --exec 'npm run build && npm run start' --config nodemon.config.json",
-    "start": "http-server",
+    "dev": "nodemon --exec 'node scripts/dev.js'",
     "build": "node scripts/build.js"
   },
   "repository": {
@@ -15,9 +14,8 @@
     "url": "git+https://github.com/discovery-solutions/react.git"
   },
   "devDependencies": {
-    "http-server": "^14.1.1",
-    "nodemon": "^3.0.1",
     "rollup": "^3.26.2",
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "nodemon": "^3.0.1"
   }
 }
