@@ -1,12 +1,12 @@
-import { components, current } from "/src/hooks.js";
-import "/src/components.js";
+import { components, current } from "./hooks.js";
+import "./components.js";
 
 window.React = {
   functions: {},
   inRender: false,
 }
 
-export * from "/src/hooks.js";
+export * from "./hooks.js";
 
 export function register(component, alias = null) {
   const name = "x-" + (alias || component.name.toLowerCase());
