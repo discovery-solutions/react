@@ -1,4 +1,6 @@
 {
+  "watch": ["src/"],
+  "ext": "js,mjs,cjs,json,ts,html",
   "verbose": true,
   "ignore": ["dist/", "ts-out/", "scripts/"]
 }

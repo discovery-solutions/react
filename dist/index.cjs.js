@@ -55,25 +55,26 @@ function clearURL(url) {
 class ReactiveRouter extends HTMLElement {
     constructor() {
         super();
-        this.attachShadow({ mode: "open" });
+        this.templates = [];
         window.addEventListener("popstate", () => this.updateRoute());
     }
     connectedCallback() {
+        this.templates = Array.from(this.querySelectorAll("template"));
         this.updateRoute();
     }
     updateRoute() {
+        var _a;
         const route = clearURL(window.location.pathname);
-        this.shadowRoot.innerHTML = "";
-        const template = Array.from(this.querySelectorAll("template")).find((template) => {
+        this.innerHTML = "";
+        const template = (_a = this === null || this === void 0 ? void 0 : this.templates) === null || _a === void 0 ? void 0 : _a.find((template) => {
             const templateRoute = clearURL(template.getAttribute("data-route") || "");
-            // if (["#", "/", ""].includes(templateRoute))
-            //   return template;
+            if (["#", "/", ""].includes(templateRoute))
+                return template;
             return templateRoute.includes(route);
         });
-        console.log(template);
         if (template) {
-            this.shadowRoot.innerHTML = "";
-            this.shadowRoot.appendChild(template.content.cloneNode(true));
+            this.innerHTML = "";
+            this.appendChild(template.content.cloneNode(true));
         }
     }
 }
@@ -110,7 +111,6 @@ function register(component, alias = null) {
             current.refIndex = 0;
             current.component = name;
             this.reactive = name;
-            this.attachShadow({ mode: "open" });
             this.render();
         }
         render() {
@@ -118,8 +118,8 @@ function register(component, alias = null) {
             const node = component();
             window.React.inRender = false;
             node.setAttribute("data-reactive", name);
-            this.shadowRoot.innerHTML = "";
-            this.shadowRoot.append(node);
+            this.innerHTML = "";
+            this.appendChild(node);
         }
     }
     customElements.define(name, CustomElement);
@@ -133,7 +133,13 @@ function render(strings, ...values) {
             window.React.functions[fnId] = value;
             value = `window.React.functions.${fnId}()`;
         }
-        if (typeof values[i] === "object")
+        if (Array.isArray(value)) {
+            value = value.reduce((str, item) => {
+                str += item.outerHTML;
+                return str;
+            }, "");
+        }
+        if (typeof value === "object")
             return result + string;
         return result + string + value;
     }, "");

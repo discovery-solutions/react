@@ -10,21 +10,24 @@ function clearURL(url: string): string {
 }
 
 class ReactiveRouter extends HTMLElement {
+  templates?: HTMLTemplateElement[];
+
   constructor() {
     super();
-    this.attachShadow({ mode: "open" });
+    this.templates = [];
     window.addEventListener("popstate", () => this.updateRoute());
   }
 
-  connectedCallback(): void {
+  connectedCallback() {
+    this.templates = Array.from(this.querySelectorAll("template"));
     this.updateRoute();
   }
 
-  updateRoute(): void {
+  updateRoute() {
     const route = clearURL(window.location.pathname);
-    this.shadowRoot!.innerHTML = "";
+    this.innerHTML = "";
 
-    const template = Array.from(this.querySelectorAll("template")).find((template) => {
+    const template = this?.templates?.find((template) => {
       const templateRoute = clearURL(template.getAttribute("data-route") || "");
 
       if (["#", "/", ""].includes(templateRoute))
@@ -34,8 +37,8 @@ class ReactiveRouter extends HTMLElement {
     });
 
     if (template) {
-      this.shadowRoot!.innerHTML = "";
-      this.shadowRoot!.appendChild(template.content.cloneNode(true));
+      this.innerHTML = "";
+      this.appendChild(template.content.cloneNode(true));
     }
   }
 }

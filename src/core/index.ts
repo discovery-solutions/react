@@ -35,8 +35,6 @@ export function register(component: Function, alias: string | null = null): any 
       current.component = name;
 
       this.reactive = name;
-      this.attachShadow({ mode: "open" });
-
       this.render();
     }
 
@@ -46,8 +44,8 @@ export function register(component: Function, alias: string | null = null): any 
       window.React.inRender = false;
       node.setAttribute("data-reactive", name);
 
-      this.shadowRoot!.innerHTML = "";
-      this.shadowRoot!.append(node);
+      this.innerHTML = "";
+      this.appendChild(node);
     }
   }
 
@@ -66,7 +64,14 @@ export function render(strings: TemplateStringsArray, ...values: any[]): Node {
       value = `window.React.functions.${fnId}()`;
     }
 
-    if (typeof values[i] === "object")
+    if (Array.isArray(value)) {
+      value = value.reduce((str, item) => {
+        str += (item as Element).outerHTML;
+        return str;
+      }, "");
+    }
+
+    if (typeof value === "object")
       return result + string;
 
     return result + string + value;
