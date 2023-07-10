@@ -9,6 +9,11 @@ A lightweight, custom elements-based library for building reactive web component
 - Client-side routing
 - Basic hooks API (useState, useEffect, useRef)
 
+## Examples
+
+* ```Counter```: A simple counter with component and hooks [here](https://github.com/discovery-solutions/react/tree/master/docs/counter).
+* ```Router```: A complete example with component, hooks, router and more, [right here.](https://github.com/discovery-solutions/react/tree/master/docs/counter).
+
 ## Usage
 
 Here's a basic example of a component built with @dscrv-solutions/react:
