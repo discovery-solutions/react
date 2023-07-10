@@ -5,21 +5,21 @@ function Counter() {
   const ref = useRef();
 
   useEffect(() => {
-    // console.log("Should only run once");
+    console.log("Should only run once");
   }, []);
 
   useEffect(() => {
-    // setTimeout(() => {
-    //   console.log("Logging the counter after 1 second: " + count);
-    // }, 1000);
+    setTimeout(() => {
+      console.log("Logging the counter after 1 second: " + count);
+    }, 1000);
 
-    // return () => {
-    //   console.log("I'm on the cleanup function");
-    // }
+    return () => {
+      console.log("I'm on the cleanup function");
+    }
   }, [count]);
 
   useEffect(() => {
-    // console.log(ref);
+    console.log(ref); // Should render a dom element
   }, [ref]);
 
   return render`
