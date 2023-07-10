@@ -18,21 +18,32 @@ A lightweight, custom elements-based library for building reactive web component
 
 Here's a basic example of a component built with @dscrv-solutions/react:
 
-```javascript
-import { register, render, useState } from 'https://cdn.jsdelivr.net/gh/discovery-solutions/react@master/dist/index.es.js';
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Counter Example</title>
+    <script type="module">
+      import { register, render, useState } from 'https://cdn.jsdelivr.net/gh/discovery-solutions/react@master/dist/index.es.js';
 
-const Counter = () => {
-  const [count, setCount] = useState(0);
+      const Counter = () => {
+        const [count, setCount] = useState(0);
 
-  return render`
-    <div>
-      <p>${count}<p>
-      <button onClick="${() => setCount(count + 1)}">Add more</button>
-    </div>
-  `;
-}
+        return render`
+          <div>
+            <p>${count}<p>
+            <button onClick="${() => setCount(count + 1)}">Add more</button>
+          </div>
+        `;
+      }
 
-register(Counter, "my-counter");
+      register(Counter, "my-counter");
+    </script>
+  </head>
+  <body>
+    <my-counter></my-counter>
+  </body>
+</html>
 ```
 
 You can then use this component in your HTML like any other custom element:
@@ -43,7 +54,7 @@ You can then use this component in your HTML like any other custom element:
 
 ## Routing
 
-@dscrv-solutions/react includes a basic client-side router. Here's an example of how to use it:
+@dscrv-solutions/react includes a basic client-side router with two components: ```reactive-router``` and ```reactive-link```. Here's an example of how to use it:
 
 ```html
 <reactive-router>
@@ -67,28 +78,29 @@ You can then use this component in your HTML like any other custom element:
 @dscrv-solutions/react includes a basic hooks API. Here's an example of how to use the `useState` and `useEffect` hooks:
 
 ```javascript
-import { register, render, useState, useEffect } from 'https://cdn.jsdelivr.net/gh/discovery-solutions/react@master/dist/index.es.js';
+import { register, render, useState, useEffect, useRef } from 'https://cdn.jsdelivr.net/gh/discovery-solutions/react@master/dist/index.es.js';
 
-const Counter = () => {
-  const [count, setCount] = useState(0);
+const Timer = () => {
+  const [seconds, setSeconds] = useState(0);
+  const intervalRef = useRef(null);
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      setCount(count + 1);
+    intervalRef.current = setInterval(() => {
+      setSeconds(seconds => seconds + 1);
     }, 1000);
 
-    return () => clearInterval(intervalId); // Cleanup function
-  }, [count]); // Dependencies array
+    return () => clearInterval(intervalRef.current); // Cleanup function
+  }, []); // Empty dependencies array means this effect runs once on mount and clean up on unmount
 
   return render`
     <div>
-      <p>${count}<p>
-      <button onClick="${() => setCount(count + 1)}">Add more</button>
+      <p>Elapsed time: ${seconds} seconds<p>
+      <button onClick="${() => clearInterval(intervalRef.current)}">Stop Timer</button>
     </div>
   `;
 }
 
-register(Counter, "my-counter");
+register(Timer, "my-timer");
 ```
 
 ## Contributing
