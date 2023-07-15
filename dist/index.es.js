@@ -66,7 +66,6 @@ class ReactiveRouter extends HTMLElement {
         this.innerHTML = "";
         const template = (_a = this === null || this === void 0 ? void 0 : this.templates) === null || _a === void 0 ? void 0 : _a.find((template) => {
             const templateRoute = clearURL(template.getAttribute("data-route") || "");
-            console.log(templateRoute, route);
             if (["#", "/"].includes(templateRoute))
                 return template;
             return templateRoute.includes(route);
