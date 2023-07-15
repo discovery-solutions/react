@@ -63,5 +63,8 @@ class ReactiveLink extends HTMLElement {
   }
 }
 
-customElements.define("reactive-router", ReactiveRouter);
-customElements.define("reactive-link", ReactiveLink);
+if (!customElements.get("reactive-router"))
+  customElements.define("reactive-router", ReactiveRouter);
+
+if (!customElements.get("reactive-link"))
+  customElements.define("reactive-link", ReactiveLink);
