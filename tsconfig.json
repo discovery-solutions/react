@@ -1,14 +1,13 @@
 {
-  "include": ["./src/core/**/*.ts"],
   "compilerOptions": {
-    "target": "es2016",                          
-    "module": "esnext",
-    "moduleResolution": "node",                     
-    "noEmitOnError": true,
-    "lib": ["es2017", "dom"],                            
-    "strict": true,  
-    "esModuleInterop": false,                 
-    "outDir": "ts-out",
-    "rootDir": "./src/core"
+    "target": "es2017",
+    "module": "commonjs",
+    "strict": false,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "./dist",
+    "declaration": true
   },
+  "include": ["src/**/*"]
 }

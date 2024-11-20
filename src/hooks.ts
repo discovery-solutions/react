@@ -1,3 +1,5 @@
+import { uuid } from "./utils";
+
 const refs = new Map<string, Ref>();
 const store: Record<string, any> = {};
 const effects = new Map<string, any[]>();
@@ -9,7 +11,7 @@ export const components: Record<string, any> = {};
 export const current = { component: null as string | null, refIndex: null as number | null };
 
 export function useEffect(effect: () => (() => void) | void, deps: any[]) {
-  const effectId = effect.name || effect.toString();
+  const effectId = uuid();
   const oldDeps = effects.get(effectId);
 
   if (!oldDeps || deps.some((dep, i) => !Object.is(dep, oldDeps[i]))) {
