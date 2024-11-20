@@ -1,5 +1,3 @@
-import { uuid } from "./utils.js";
-
 const refs = new Map<string, Ref>();
 const store: Record<string, any> = {};
 const effects = new Map<string, any[]>();
@@ -10,22 +8,22 @@ export const components: Record<string, any> = {};
 
 export const current = { component: null as string | null, refIndex: null as number | null };
 
-export function useEffect(effectFn: any | void, deps: any[]) {
-  effectFn.effectId = effectFn.effectId || uuid();
-  const oldDeps = effects.get(effectFn.effectId);
+export function useEffect(effect: () => (() => void) | void, deps: any[]) {
+  const effectId = [current.component, effect.name].join('_');
+  const oldDeps = effects.get(effectId);
 
   if (!oldDeps || deps.some((dep, i) => !Object.is(dep, oldDeps[i]))) {
-    const cleanupFunction = cleanupFunctions.get(effectFn.effectId);
+    const cleanupFunction = cleanupFunctions.get(effectId);
 
     if (cleanupFunction)
       cleanupFunction();
 
-    const newCleanupFunction = effectFn();
+    const newCleanupFunction = effect();
 
     if (newCleanupFunction)
-      cleanupFunctions.set(effectFn.effectId, newCleanupFunction);
+      cleanupFunctions.set(effectId, newCleanupFunction);
 
-    effects.set(effectFn.effectId, deps);
+    effects.set(effectId, deps);
   }
 }
 
