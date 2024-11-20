@@ -17,8 +17,9 @@ window.React = {
 
 export * from "./hooks";
 
-export function register(component: Function, alias: string | null = null): any {
-  let name = (alias || component.name.toLowerCase());
+export function register(name: string, component: Function): any {
+  if (!name) throw new Error(`Component name is required`);
+  if (!component) throw new Error(`Component function is required`);
 
   if (name.includes("-") === false)
     name = "x-" + name;
