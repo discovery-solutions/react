@@ -8,7 +8,7 @@
   "license": "MIT",
   "scripts": {
     "release": "standard-version && git push --follow-tags origin main",
-    "build": "rimraf dist && npx ncc build src/index.ts -o dist",
+    "build": "rimraf dist && tsc",
     "prepublishOnly": "npm run build"
   },
   "repository": {

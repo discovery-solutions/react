@@ -8,5 +8,5 @@ declare global {
     }
 }
 export * from "./hooks";
-export declare function register(component: Function, alias?: string | null): any;
+export declare function register(name: string, component: Function): any;
 export declare function render(strings: TemplateStringsArray, ...values: any[]): Node;
