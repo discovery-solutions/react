@@ -2,7 +2,6 @@ const refs = new Map<string, Ref>();
 const store: Record<string, any> = {};
 const effects = new Map<string, any[]>();
 const cleanupFunctions = new Map<string, () => void>();
-const id = Math.random().toString(36).substring(2, 15);
 
 export const components: Record<string, any> = {};
 
@@ -28,7 +27,9 @@ export function useEffect(effect: () => (() => void) | void, deps: any[]) {
 }
 
 export function useState<T>(initialValue: T): [T, (newValue: T) => void] {
+  const id = Math.random().toString(36).substring(2, 15);
   console.log(id, initialValue);
+  
   if (!store[id])
     store[id] = initialValue;
 
