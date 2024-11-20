@@ -12,8 +12,6 @@ export function useEffect(effect: () => (() => void) | void, deps: any[]) {
   const effectId = [current.component, effect.name].join('_');
   const oldDeps = effects.get(effectId);
 
-  console.log(oldDeps, deps)
-  console.log(!oldDeps, deps.some((dep, i) => !Object.is(dep, oldDeps[i])))
   if (!oldDeps || deps.some((dep, i) => !Object.is(dep, oldDeps[i]))) {
     const cleanupFunction = cleanupFunctions.get(effectId);
 
@@ -30,12 +28,14 @@ export function useEffect(effect: () => (() => void) | void, deps: any[]) {
 }
 
 export function useState<T>(initialValue: T): [T, (newValue: T) => void] {
+  console.log(id, initialValue);
   if (!store[id])
     store[id] = initialValue;
 
   return [
     store[id],
     (newValue: T) => {
+      console.log(id, newValue);
       store[id] = newValue;
       Object.values(components).forEach(component => component.render());
     }

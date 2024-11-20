@@ -8,8 +8,6 @@ export const current = { component: null, refIndex: null };
 export function useEffect(effect, deps) {
     const effectId = [current.component, effect.name].join('_');
     const oldDeps = effects.get(effectId);
-    console.log(oldDeps, deps);
-    console.log(!oldDeps, deps.some((dep, i) => !Object.is(dep, oldDeps[i])));
     if (!oldDeps || deps.some((dep, i) => !Object.is(dep, oldDeps[i]))) {
         const cleanupFunction = cleanupFunctions.get(effectId);
         if (cleanupFunction)
@@ -21,11 +19,13 @@ export function useEffect(effect, deps) {
     }
 }
 export function useState(initialValue) {
+    console.log(id, initialValue);
     if (!store[id])
         store[id] = initialValue;
     return [
         store[id],
         (newValue) => {
+            console.log(id, newValue);
             store[id] = newValue;
             Object.values(components).forEach(component => component.render());
         }
