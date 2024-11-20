@@ -39,13 +39,17 @@ export function register(name: string, component: Function): any {
     }
 
     render() {
-      window.React.inRender = true;
-      const node = component();
-      window.React.inRender = false;
-      node.setAttribute("data-reactive", name);
+      try {
+        window.React.inRender = true;
+        const node = component();
+        window.React.inRender = false;
+        node.setAttribute("data-reactive", name);
 
-      this.innerHTML = "";
-      this.appendChild(node);
+        this.innerHTML = "";
+        this.appendChild(node);
+      } catch (error) {
+        console.error(error);
+      }
     }
   }
 

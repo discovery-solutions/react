@@ -22,12 +22,17 @@ export function register(name, component) {
             this.render();
         }
         render() {
-            window.React.inRender = true;
-            const node = component();
-            window.React.inRender = false;
-            node.setAttribute("data-reactive", name);
-            this.innerHTML = "";
-            this.appendChild(node);
+            try {
+                window.React.inRender = true;
+                const node = component();
+                window.React.inRender = false;
+                node.setAttribute("data-reactive", name);
+                this.innerHTML = "";
+                this.appendChild(node);
+            }
+            catch (error) {
+                console.error(error);
+            }
         }
     }
     customElements.define(name, CustomElement);
