@@ -1,29 +1,11 @@
-"use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __exportStar = (this && this.__exportStar) || function(m, exports) {
-    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.register = register;
-exports.render = render;
-const hooks_1 = require("./hooks");
-require("./components");
+import { components, current } from "./hooks";
+import "./components";
 window.React = {
     functions: {},
     inRender: false,
 };
-__exportStar(require("./hooks"), exports);
-function register(name, component) {
+export * from "./hooks";
+export function register(name, component) {
     if (!name)
         throw new Error(`Component name is required`);
     if (!component)
@@ -33,9 +15,9 @@ function register(name, component) {
     class CustomElement extends HTMLElement {
         constructor() {
             super();
-            hooks_1.components[name] = this;
-            hooks_1.current.refIndex = 0;
-            hooks_1.current.component = name;
+            components[name] = this;
+            current.refIndex = 0;
+            current.component = name;
             this.reactive = name;
             this.render();
         }
@@ -51,7 +33,7 @@ function register(name, component) {
     customElements.define(name, CustomElement);
     return { reactive: name };
 }
-function render(strings, ...values) {
+export function render(strings, ...values) {
     const htmlString = strings.reduce((result, string, i) => {
         let value = values[i];
         if (typeof value === "function") {
