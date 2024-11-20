@@ -6,17 +6,17 @@ const cleanupFunctions = new Map();
 const id = Math.random().toString(36).substring(2, 15);
 export const components = {};
 export const current = { component: null, refIndex: null };
-export function useEffect(effect, deps) {
-    const effectId = uuid();
-    const oldDeps = effects.get(effectId);
+export function useEffect(effectFn, deps) {
+    effectFn.effectId = effectFn.effectId || uuid();
+    const oldDeps = effects.get(effectFn.effectId);
     if (!oldDeps || deps.some((dep, i) => !Object.is(dep, oldDeps[i]))) {
-        const cleanupFunction = cleanupFunctions.get(effectId);
+        const cleanupFunction = cleanupFunctions.get(effectFn.effectId);
         if (cleanupFunction)
             cleanupFunction();
-        const newCleanupFunction = effect();
+        const newCleanupFunction = effectFn();
         if (newCleanupFunction)
-            cleanupFunctions.set(effectId, newCleanupFunction);
-        effects.set(effectId, deps);
+            cleanupFunctions.set(effectFn.effectId, newCleanupFunction);
+        effects.set(effectFn.effectId, deps);
     }
 }
 export function useState(initialValue) {

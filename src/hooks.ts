@@ -10,22 +10,22 @@ export const components: Record<string, any> = {};
 
 export const current = { component: null as string | null, refIndex: null as number | null };
 
-export function useEffect(effect: () => (() => void) | void, deps: any[]) {
-  const effectId = uuid();
-  const oldDeps = effects.get(effectId);
+export function useEffect(effectFn: any | void, deps: any[]) {
+  effectFn.effectId = effectFn.effectId || uuid();
+  const oldDeps = effects.get(effectFn.effectId);
 
   if (!oldDeps || deps.some((dep, i) => !Object.is(dep, oldDeps[i]))) {
-    const cleanupFunction = cleanupFunctions.get(effectId);
+    const cleanupFunction = cleanupFunctions.get(effectFn.effectId);
 
     if (cleanupFunction)
       cleanupFunction();
 
-    const newCleanupFunction = effect();
+    const newCleanupFunction = effectFn();
 
     if (newCleanupFunction)
-      cleanupFunctions.set(effectId, newCleanupFunction);
+      cleanupFunctions.set(effectFn.effectId, newCleanupFunction);
 
-    effects.set(effectId, deps);
+    effects.set(effectFn.effectId, deps);
   }
 }
 
