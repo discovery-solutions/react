@@ -1,10 +1,10 @@
-import { components, current } from "./hooks";
-import "./components";
+import { components, current } from "./hooks.js";
+import "./components.js";
+export * from "./hooks.js";
 window.React = {
     functions: {},
     inRender: false,
 };
-export * from "./hooks";
 export function register(name, component) {
     if (!name)
         throw new Error(`Component name is required`);

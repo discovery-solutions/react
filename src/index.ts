@@ -1,6 +1,7 @@
-import { components, current } from "./hooks";
-import "./components";
+import { components, current } from "./hooks.js";
+import "./components.js";
 
+export * from "./hooks.js";
 declare global {
   interface Window {
     React: {
@@ -14,8 +15,6 @@ window.React = {
   functions: {},
   inRender: false,
 }
-
-export * from "./hooks";
 
 export function register(name: string, component: Function): any {
   if (!name) throw new Error(`Component name is required`);

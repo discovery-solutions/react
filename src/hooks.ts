@@ -1,4 +1,4 @@
-import { uuid } from "./utils";
+import { uuid } from "./utils.js";
 
 const refs = new Map<string, Ref>();
 const store: Record<string, any> = {};
