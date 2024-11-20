@@ -12,8 +12,6 @@ export function useEffect(effect: () => (() => void) | void, deps: any[]) {
   const effectId = [current.component, effect.name].join('_');
   const oldDeps = effects.get(effectId);
 
-  console.log(oldDeps, deps);
-
   if (!oldDeps || deps.some((dep, i) => !Object.is(dep, oldDeps[i]))) {
     const cleanupFunction = cleanupFunctions.get(effectId);
 
