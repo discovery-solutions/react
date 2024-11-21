@@ -14,9 +14,10 @@ const store: Record<string, any> = {};
 const refs = new Map<string, Ref>();
 
 export function useEffect(effect: () => (() => void) | void, deps: any[]) {
-  if (current.component === null || current.refIndex === null) {
+  console.log("useEffect", current);
+  
+  if (current.component === null || current.refIndex === null)
     throw new Error("useEffect cannot be used out of context");
-  }
 
   const effectId = `${current.component}_${current.refIndex}`;
   const oldDeps = effects.get(effectId);
@@ -34,20 +35,23 @@ export function useEffect(effect: () => (() => void) | void, deps: any[]) {
 }
 
 export function useState<T>(initialValue: T): [T, (newValue: T) => void] {
-  if (current.component === null) {
+  console.log("useEffect", current);
+
+  if (current.component === null)
     throw new Error("useState cannot be used out of context");
-  }
 
   const componentData = components[current.component];
   const stateId = `${current.component}_${componentData.index}`;
-  if (!store[stateId]) store[stateId] = initialValue;
+  const isInitialRender = !store[stateId];
+
+  if (isInitialRender) store[stateId] = initialValue;
 
   const setState = (newValue: T) => {
     store[stateId] = newValue;
-    Object.values(components).forEach(({ instance }) => instance.render());
+    componentData.instance.render();
   };
 
-  componentData.index++;
+  if (isInitialRender) componentData.index++;
 
   return [store[stateId], setState];
 }

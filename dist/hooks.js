@@ -8,9 +8,9 @@ const cleanupFunctions = new Map();
 const store = {};
 const refs = new Map();
 export function useEffect(effect, deps) {
-    if (current.component === null || current.refIndex === null) {
+    console.log("useEffect", current);
+    if (current.component === null || current.refIndex === null)
         throw new Error("useEffect cannot be used out of context");
-    }
     const effectId = `${current.component}_${current.refIndex}`;
     const oldDeps = effects.get(effectId);
     current.refIndex++;
@@ -25,18 +25,20 @@ export function useEffect(effect, deps) {
     }
 }
 export function useState(initialValue) {
-    if (current.component === null) {
+    console.log("useEffect", current);
+    if (current.component === null)
         throw new Error("useState cannot be used out of context");
-    }
     const componentData = components[current.component];
     const stateId = `${current.component}_${componentData.index}`;
-    if (!store[stateId])
+    const isInitialRender = !store[stateId];
+    if (isInitialRender)
         store[stateId] = initialValue;
     const setState = (newValue) => {
         store[stateId] = newValue;
-        Object.values(components).forEach(({ instance }) => instance.render());
+        componentData.instance.render();
     };
-    componentData.index++;
+    if (isInitialRender)
+        componentData.index++;
     return [store[stateId], setState];
 }
 export function useRef(initialValue) {
