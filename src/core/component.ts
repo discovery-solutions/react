@@ -6,12 +6,12 @@ export interface CustomElementInterface extends HTMLElement {
   connectedCallback(): void;
 }
 
-export const register = (Component: () => any, tagName: string) => {
+export const register = (tagName: string, Component: () => any) => {
   class CustomElement extends HTMLElement implements CustomElementInterface {
     connectedCallback() {
       Components[tagName] = this;
       const stateInfo = componentStates.get(this);
-      
+
       if (stateInfo) stateInfo.index = 0;
 
       currentComponentInstance = this;
