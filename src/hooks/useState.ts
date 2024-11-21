@@ -19,7 +19,6 @@ export const useState = <T>(initialValue: T): [T, (newValue: T) => void] => {
 
   const setState = (newValue: T) => {
     stateInfo.states[currentIndex] = newValue;
-    console.log(reRender)
     reRender();
   };
 
