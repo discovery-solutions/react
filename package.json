@@ -8,7 +8,9 @@
   "license": "MIT",
   "scripts": {
     "release": "standard-version && git push --follow-tags origin main",
-    "build": "rimraf dist && tsc",
+    "build": "rimraf dist && vite build",
+    "dev": "nodemon --watch src --exec \"npm run dev:build\"",
+    "dev:build": "rimraf ./dev/dist && npm run build && cp -r ./dist ./dev/dist && http-server ./dev -p 8080",
     "prepublishOnly": "npm run build"
   },
   "repository": {
@@ -17,8 +19,10 @@
   },
   "devDependencies": {
     "@vercel/ncc": "^0.38.3",
+    "http-server": "^14.1.1",
     "nodemon": "^3.0.1",
+    "rimraf": "^6.0.1",
     "typescript": "^5.1.6",
-    "rimraf": "^6.0.1"
+    "vite": "^5.4.11"
   }
 }

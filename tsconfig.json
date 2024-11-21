@@ -2,13 +2,13 @@
   "compilerOptions": {
     "lib": ["es6", "dom", "es2017"],
     "target": "ES6",
-    "module": "ESNext",
+    "module": "AMD",
     "moduleResolution": "node",
     "strict": false,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "outDir": "./dist",
+    "outFile": "./dist/index.js",
     "declaration": true
   },
   "include": ["src/**/*"]
