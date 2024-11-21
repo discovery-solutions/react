@@ -1,12 +1,19 @@
-const refs = new Map();
-const store = {};
+export const components = {};
+export const current = {
+    component: null,
+    refIndex: null,
+};
 const effects = new Map();
 const cleanupFunctions = new Map();
-export const components = {};
-export const current = { component: null, refIndex: null };
+const store = {};
+const refs = new Map();
 export function useEffect(effect, deps) {
-    const effectId = [current.component, effect.name].join('_');
+    if (current.component === null || current.refIndex === null) {
+        throw new Error("useEffect cannot be used out of context");
+    }
+    const effectId = `${current.component}_${current.refIndex}`;
     const oldDeps = effects.get(effectId);
+    current.refIndex++;
     if (!oldDeps || deps.some((dep, i) => !Object.is(dep, oldDeps[i]))) {
         const cleanupFunction = cleanupFunctions.get(effectId);
         if (cleanupFunction)
@@ -18,23 +25,19 @@ export function useEffect(effect, deps) {
     }
 }
 export function useState(initialValue) {
-    const id = Math.random().toString(36).substring(2, 15);
-    console.log(id, initialValue);
-    if (!store[id])
-        store[id] = initialValue;
-    return [
-        store[id],
-        (newValue) => {
-            console.log(id, newValue);
-            store[id] = newValue;
-            Object.values(components).forEach(component => component.render());
-        }
-    ];
-}
-class Ref {
-    constructor(current) {
-        this.current = current;
+    if (current.component === null) {
+        throw new Error("useState cannot be used out of context");
     }
+    const componentData = components[current.component];
+    const stateId = `${current.component}_${componentData.index}`;
+    if (!store[stateId])
+        store[stateId] = initialValue;
+    const setState = (newValue) => {
+        store[stateId] = newValue;
+        Object.values(components).forEach(({ instance }) => instance.render());
+    };
+    componentData.index++;
+    return [store[stateId], setState];
 }
 export function useRef(initialValue) {
     if (current.component === null || current.refIndex === null) {
@@ -45,4 +48,9 @@ export function useRef(initialValue) {
     if (!window.React.inRender)
         current.refIndex++;
     return ref;
+}
+class Ref {
+    constructor(current) {
+        this.current = current;
+    }
 }

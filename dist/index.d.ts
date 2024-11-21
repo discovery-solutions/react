@@ -1,4 +1,3 @@
-import "./components.js";
 export * from "./hooks.js";
 declare global {
     interface Window {

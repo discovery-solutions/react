@@ -1,5 +1,4 @@
 import { components, current } from "./hooks.js";
-import "./components.js";
 export * from "./hooks.js";
 window.React = {
     functions: {},
@@ -10,12 +9,12 @@ export function register(name, component) {
         throw new Error(`Component name is required`);
     if (!component)
         throw new Error(`Component function is required`);
-    if (name.includes("-") === false)
+    if (!name.includes("-"))
         name = "x-" + name;
     class CustomElement extends HTMLElement {
         constructor() {
             super();
-            components[name] = this;
+            components[name] = { instance: this, index: 0 };
             current.refIndex = 0;
             current.component = name;
             this.reactive = name;
@@ -26,7 +25,7 @@ export function register(name, component) {
                 window.React.inRender = true;
                 const node = component();
                 window.React.inRender = false;
-                node.setAttribute("data-reactive", name);
+                node.setAttribute("data-reactive", this.reactive);
                 this.innerHTML = "";
                 this.appendChild(node);
             }
@@ -59,8 +58,9 @@ export function render(strings, ...values) {
     const template = document.createElement("template");
     template.innerHTML = htmlString.trim();
     const node = template.content.firstChild;
-    for (let i = 0; i < values.length; i++)
+    for (let i = 0; i < values.length; i++) {
         if (values[i].constructor.name === "Ref")
             values[i].current = node;
+    }
     return node;
 }
