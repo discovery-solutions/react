@@ -5,24 +5,24 @@ export const useEffect = (callback: () => void | (() => void), deps: any[]) => {
     throw new Error("useEffect must be used within a component.");
 
   if (!componentStates.has(currentComponentInstance))
-    componentStates.set(currentComponentInstance, { states: [], index: 0 });
+    componentStates.set(currentComponentInstance, { states: [], effects: [], stateIndex: 0, effectIndex: 0 });
 
   const stateInfo = componentStates.get(currentComponentInstance)!;
-  const currentIndex = stateInfo.index;
+  const currentIndex = stateInfo.effectIndex;
 
-  if (stateInfo.states[currentIndex] === undefined) {
-    stateInfo.states[currentIndex] = {
+  if (stateInfo.effects[currentIndex] === undefined) {
+    stateInfo.effects[currentIndex] = {
       deps: undefined,
       cleanup: undefined,
     };
   }
 
-  const state = stateInfo.states[currentIndex] as {
+  const state = stateInfo.effects[currentIndex] as {
     deps: any[] | undefined;
     cleanup: (() => void) | undefined;
   };
 
-  stateInfo.index++;
+  stateInfo.effectIndex++;
 
   const hasChangedDeps = () => {
     if (!state.deps) return true;
@@ -30,9 +30,17 @@ export const useEffect = (callback: () => void | (() => void), deps: any[]) => {
     return deps.some((dep, i) => dep !== state.deps![i]);
   };
 
-  if (hasChangedDeps()) {
+  const shouldUpdateEffect = hasChangedDeps();
+
+  if (shouldUpdateEffect) {
     if (state.cleanup) state.cleanup();
-    state.cleanup = callback() || undefined;
-    state.deps = deps;
+    state.cleanup = undefined;
+
+    Promise.resolve().then(() => {
+      state.cleanup = callback() || undefined;
+      state.deps = deps;
+    });
+
+    stateInfo.effects[currentIndex] = state;
   }
 };

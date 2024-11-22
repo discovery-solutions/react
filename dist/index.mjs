@@ -1,6 +1,6 @@
-const p = {}, l = /* @__PURE__ */ new Map();
-let a = null;
-const g = (r, t) => {
+const p = {}, f = /* @__PURE__ */ new Map();
+let d = null;
+const v = (r, t) => {
   class e extends HTMLElement {
     constructor() {
       super(...arguments), this.props = {};
@@ -10,16 +10,16 @@ const g = (r, t) => {
     }
     connectedCallback() {
       this.props = this.parseAttributes(), p[r] = this;
-      const n = l.get(this);
-      n && (n.index = 0);
+      const n = f.get(this);
+      n && (n.stateIndex = 0, n.effectIndex = 0);
       try {
-        a = this;
+        d = this;
         const s = t.call(this, this.props);
         s.setAttribute("data-reactive", r), this.innerHTML = "", this.appendChild(s);
       } catch (s) {
         console.error(s), this.innerHTML = "";
       } finally {
-        a = null;
+        d = null;
       }
     }
     attributeChangedCallback() {
@@ -27,13 +27,13 @@ const g = (r, t) => {
     }
     parseAttributes() {
       const n = {};
-      for (const { name: s, value: o } of Array.from(this.attributes))
+      for (const { name: s, value: a } of Array.from(this.attributes))
         if (s.startsWith("data-")) {
           const c = s.replace(/^data-/, "");
           try {
-            n[c] = JSON.parse(o.replace(/'/g, '"'));
+            n[c] = JSON.parse(a.replace(/'/g, '"'));
           } catch {
-            n[c] = o;
+            n[c] = a;
           }
         }
       return n;
@@ -44,55 +44,57 @@ const g = (r, t) => {
 window.React = {
   functions: {}
 };
-const v = (r, ...t) => {
-  var s, o;
-  const e = r.reduce((c, h, m) => {
-    let i = t[m];
-    if (typeof i == "function") {
-      const d = `fn_${Math.random().toString(36).substring(2, 15)}`;
-      window.React.functions[d] = i, i = `window.React.functions.${d}()`;
+const g = (r, ...t) => {
+  var s, a;
+  const e = r.reduce((c, l, m) => {
+    let o = t[m];
+    if (typeof o == "function") {
+      const u = `fn_${Math.random().toString(36).substring(2, 15)}`;
+      window.React.functions[u] = o, o = `window.React.functions.${u}()`;
     }
-    if (Array.isArray(i) && (i = i.reduce((d, f) => (d += f.outerHTML, d), "")), typeof i == "object" && i !== null)
+    if (Array.isArray(o) && (o = o.reduce((u, h) => (u += h.outerHTML, u), "")), typeof o == "object" && o !== null)
       try {
-        i = JSON.stringify(i, (d, f) => d === "exclude" ? void 0 : f), i = i.replace(/"/g, "'");
+        o = JSON.stringify(o, (u, h) => u === "exclude" ? void 0 : h), o = o.replace(/"/g, "'");
       } catch {
-        return console.warn("Circular reference detected in:", i), c + h;
+        return console.warn("Circular reference detected in:", o), c + l;
       }
-    return c + h + (i || "");
-  }, ""), u = document.createElement("template");
-  u.innerHTML = e.trim();
-  const n = u.content.firstChild;
+    return c + l + (o || "");
+  }, ""), i = document.createElement("template");
+  i.innerHTML = e.trim();
+  const n = i.content.firstChild;
   for (let c = 0; c < t.length; c++)
-    ((o = (s = t[c]) == null ? void 0 : s.constructor) == null ? void 0 : o.name) === "Ref" && (t[c].current = n);
+    ((a = (s = t[c]) == null ? void 0 : s.constructor) == null ? void 0 : a.name) === "Ref" && (t[c].current = n);
   return n;
 }, E = (r) => {
   const t = /* @__PURE__ */ new Set();
   let e = r;
-  return { get: () => e, set: (o) => {
-    o !== e && (e = o, t.forEach((c) => c(o)));
-  }, subscribe: (o) => (t.add(o), () => t.delete(o)) };
-}, y = (r, t) => {
-  if (!a)
+  return { get: () => e, set: (a) => {
+    a !== e && (e = a, t.forEach((c) => c(a)));
+  }, subscribe: (a) => (t.add(a), () => t.delete(a)) };
+}, x = (r, t) => {
+  if (!d)
     throw new Error("useEffect must be used within a component.");
-  l.has(a) || l.set(a, { states: [], index: 0 });
-  const e = l.get(a), u = e.index;
-  e.states[u] === void 0 && (e.states[u] = {
+  f.has(d) || f.set(d, { states: [], effects: [], stateIndex: 0, effectIndex: 0 });
+  const e = f.get(d), i = e.effectIndex;
+  e.effects[i] === void 0 && (e.effects[i] = {
     deps: void 0,
     cleanup: void 0
   });
-  const n = e.states[u];
-  e.index++, (!n.deps || t.length !== n.deps.length ? !0 : t.some((o, c) => o !== n.deps[c])) && (n.cleanup && n.cleanup(), n.cleanup = r() || void 0, n.deps = t);
-}, C = (r) => {
-  if (!a)
+  const n = e.effects[i];
+  e.effectIndex++, (!n.deps || t.length !== n.deps.length ? !0 : t.some((c, l) => c !== n.deps[l])) && (n.cleanup && n.cleanup(), n.cleanup = void 0, Promise.resolve().then(() => {
+    n.cleanup = r() || void 0, n.deps = t;
+  }), e.effects[i] = n);
+}, I = (r) => {
+  if (!d)
     throw new Error("useState must be used within a component.");
-  l.has(a) || l.set(a, { states: [], index: 0 });
-  const t = l.get(a), e = t.index;
-  t.index++, t.states[e] === void 0 && (t.states[e] = r);
-  const u = Object.keys(p).find((s) => p[s] === a), n = (s) => {
-    t.states[e] = s, p[u].connectedCallback();
+  f.has(d) || f.set(d, { states: [], effects: [], effectIndex: 0, stateIndex: 0 });
+  const t = f.get(d), e = t.stateIndex;
+  t.stateIndex++, t.states[e] === void 0 && (t.states[e] = r);
+  const i = Object.keys(p).find((s) => p[s] === d), n = (s) => {
+    t.states[e] = s, p[i].connectedCallback();
   };
   return [t.states[e], n];
-}, x = (r) => ({ current: r });
+}, y = (r) => ({ current: r });
 class b extends HTMLElement {
   connectedCallback() {
     window.onpopstate = () => this.updateRoute(), this.updateRoute();
@@ -118,12 +120,12 @@ export {
   p as Components,
   w as ReactiveLink,
   b as ReactiveRouter,
-  l as componentStates,
+  f as componentStates,
   E as createReactiveState,
-  a as currentComponentInstance,
-  g as register,
-  v as render,
-  y as useEffect,
-  x as useRef,
-  C as useState
+  d as currentComponentInstance,
+  v as register,
+  g as render,
+  x as useEffect,
+  y as useRef,
+  I as useState
 };

@@ -5,7 +5,6 @@ register('my-counter', () => {
   const [var2, setVar2] = useState(10);
 
   const onClick = () => {
-    // console.log('var1', var1);
     setVar1(var1 + 1);
     
     // setTimeout(() => {
@@ -13,6 +12,16 @@ register('my-counter', () => {
     //   setVar2(var2 + 1);
     // }, 5000);
   }
+
+  useEffect(() => {
+    console.log({var1})
+    if (var1 === 5) setVar2(20);
+  }, [var1]);
+
+  useEffect(() => {
+    console.log({var2})
+    if (var2 === 20) setVar1(0);
+  }, [var2]);
 
   // useEffect(() => {
   //   console.log('effect for var2', var2);

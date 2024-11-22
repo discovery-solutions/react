@@ -5,12 +5,12 @@ export const useState = <T>(initialValue: T): [T, (newValue: T) => void] => {
     throw new Error("useState must be used within a component.");
 
   if (!componentStates.has(currentComponentInstance))
-    componentStates.set(currentComponentInstance, { states: [], index: 0 });
+    componentStates.set(currentComponentInstance, { states: [], effects: [], effectIndex: 0, stateIndex: 0 });
 
   const stateInfo = componentStates.get(currentComponentInstance)!;
-  const currentIndex = stateInfo.index;
+  const currentIndex = stateInfo.stateIndex;
 
-  stateInfo.index++;
+  stateInfo.stateIndex++;
 
   if (stateInfo.states[currentIndex] === undefined)
     stateInfo.states[currentIndex] = initialValue;

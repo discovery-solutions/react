@@ -1,5 +1,5 @@
 export const Components: Record<string, CustomElementInterface> = {};
-export const componentStates = new Map<HTMLElement, { states: any[]; index: number }>();
+export const componentStates = new Map<HTMLElement, { states: any[]; effects: any[]; stateIndex: number; effectIndex: number; }>();
 export let currentComponentInstance: CustomElementInterface | null = null;
 
 export interface CustomElementInterface extends HTMLElement {
@@ -21,7 +21,10 @@ export const register = (tagName: string, Component: () => any) => {
       Components[tagName] = this;
       const stateInfo = componentStates.get(this);
 
-      if (stateInfo) stateInfo.index = 0;
+      if (stateInfo) {
+        stateInfo.stateIndex = 0;
+        stateInfo.effectIndex = 0;
+      }
 
       try {
         currentComponentInstance = this;
