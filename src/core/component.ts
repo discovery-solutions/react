@@ -23,14 +23,20 @@ export const register = (tagName: string, Component: () => any) => {
 
       if (stateInfo) stateInfo.index = 0;
 
-      currentComponentInstance = this;
-      const node = Component.call(this, this.props);
-      currentComponentInstance = null; 
+      try {
+        currentComponentInstance = this;
+          
+        const node = Component.call(this, this.props);
 
-      node.setAttribute("data-reactive", tagName);
-
-      this.innerHTML = "";
-      this.appendChild(node);
+        node.setAttribute("data-reactive", tagName);
+        this.innerHTML = "";
+        this.appendChild(node);
+      } catch (error) {
+        console.error(error);
+        this.innerHTML = "";
+      } finally {
+        currentComponentInstance = null; 
+      }
     }
 
     attributeChangedCallback() {
