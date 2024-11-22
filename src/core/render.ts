@@ -30,9 +30,12 @@ export const render = (strings: TemplateStringsArray, ...values: any[]): ChildNo
     if (typeof value === "object" && value !== null) {
       try {
         value = JSON.stringify(value, (key, val) => (key === "exclude" ? undefined : val));
-        value = value.replace(/"/g, "'");
-      } catch {
-        console.warn("Circular reference detected in:", value);
+        value = value
+                  .replace(/"/g, "&quot;")
+                  .replace(/'/g, "&#39;")
+                  .replace(/"/g, "'");
+      } catch (e) {
+        console.log(e);
         return result + string;
       }
     }    

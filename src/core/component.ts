@@ -53,7 +53,12 @@ export const register = (tagName: string, Component: () => any) => {
         if (name.startsWith("data-")) {
           const key = name.replace(/^data-/, "");
           try {
-            props[key] = JSON.parse(value.replace(/'/g, '"'));
+            props[key] = value
+            .replace(/@'/g, '"')
+            .replace(/&quot;/g, '"')
+            .replace(/&#39;/g, "'")
+
+            props[key] = JSON.parse(props[key]);
           } catch {
             props[key] = value;
           }
