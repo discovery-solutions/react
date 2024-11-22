@@ -27,10 +27,17 @@ export const render = (strings: TemplateStringsArray, ...values: any[]): ChildNo
       }, "");
     }
 
-    if (typeof value === "object")
-      return result + string;
+    if (typeof value === "object" && value !== null) {
+      try {
+        value = JSON.stringify(value, (key, val) => (key === "exclude" ? undefined : val));
+        value = value.replace(/"/g, "'");
+      } catch {
+        console.warn("Circular reference detected in:", value);
+        return result + string;
+      }
+    }    
 
-    return result + string + value;
+    return result + string + (value || "");
   }, "");
 
   const template = document.createElement("template");
@@ -38,7 +45,7 @@ export const render = (strings: TemplateStringsArray, ...values: any[]): ChildNo
   const node = template.content.firstChild!;
 
   for (let i = 0; i < values.length; i++)
-    if (values[i].constructor.name === "Ref")
+    if (values[i]?.constructor?.name === "Ref")
       values[i].current = node;
 
   return node;
