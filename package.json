@@ -1,26 +1,28 @@
 {
-  "name": "@dscvr-solutions/space",
+  "name": "@dscvr-solutions/react",
   "version": "0.1.0",
   "private": true,
-  "main": "dist/index.cjs.js",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "author": "Lucas Craveiro Paes <@lucascraveiropaes>",
   "license": "MIT",
   "scripts": {
-    "style": "postcss ./src/dev/styles.css -o ./src/dev/styles.min.css --watch",
-    "dev": "npm run style & nodemon --exec 'node scripts/dev.js'",
-    "build": "node scripts/build.js"
+    "release": "standard-version && git push --follow-tags origin main",
+    "build": "rimraf dist && vite build",
+    "dev": "nodemon --watch src --exec \"npm run dev:build\"",
+    "dev:build": "rimraf ./dev/dist && npm run build && cp -r ./dist ./dev/dist && http-server ./dev -p 8080",
+    "prepublishOnly": "npm run build"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/discovery-solutions/react.git"
   },
   "devDependencies": {
-    "autoprefixer": "^10.4.14",
+    "@vercel/ncc": "^0.38.3",
+    "http-server": "^14.1.1",
     "nodemon": "^3.0.1",
-    "rollup": "^3.26.2",
-    "tailwindcss": "^3.3.2",
+    "rimraf": "^6.0.1",
     "typescript": "^5.1.6",
-    "postcss": "^8.4.25",
-    "postcss-cli": "^10.1.0"
+    "vite": "^5.4.11"
   }
 }

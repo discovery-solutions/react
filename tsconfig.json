@@ -1,14 +1,15 @@
 {
-  "include": ["./src/core/**/*.ts"],
   "compilerOptions": {
-    "target": "es2016",                          
-    "module": "esnext",
-    "moduleResolution": "node",                     
-    "noEmitOnError": true,
-    "lib": ["es2017", "dom"],                            
-    "strict": true,  
-    "esModuleInterop": false,                 
-    "outDir": "ts-out",
-    "rootDir": "./src/core"
+    "lib": ["es6", "dom", "es2017"],
+    "target": "ES6",
+    "module": "AMD",
+    "moduleResolution": "node",
+    "strict": false,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "outFile": "./dist/index.js",
+    "declaration": true
   },
+  "include": ["src/**/*"]
 }
