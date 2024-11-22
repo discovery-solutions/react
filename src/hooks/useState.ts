@@ -15,9 +15,11 @@ export const useState = <T>(initialValue: T): [T, (newValue: T) => void] => {
   if (stateInfo.states[currentIndex] === undefined)
     stateInfo.states[currentIndex] = initialValue;
 
+  const key = Object.keys(Components).find((key) => Components[key] === currentComponentInstance);
+
   const setState = (newValue: T) => {
     stateInfo.states[currentIndex] = newValue;
-    Object.values(Components).forEach((component) => component.connectedCallback());
+    Components[key].connectedCallback();
   };
 
   return [stateInfo.states[currentIndex], setState];
